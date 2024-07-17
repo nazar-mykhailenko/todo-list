@@ -4,9 +4,9 @@ namespace Todolist.BLL.Interfaces;
 
 public interface ITasksService
 {
-    Task<ShortTask> GetAll();
+    Task<IEnumerable<ShortTask>> GetAll();
 
-    Task<FullTask> GetById();
+    Task<FullTask> GetById(int id);
 
     Task Create(FullTask taskModel);
 
