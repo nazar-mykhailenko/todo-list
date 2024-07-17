@@ -2,9 +2,9 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Todolist.BLL.Interfaces;
+using Todolist.BLL.Models;
 using Todolist.BLL.Services;
 using Todolist.DAL.Data;
-using Todolist.DAL.Entities;
 using Todolist.DAL.Repositories.Interfaces;
 using Todolist.DAL.Repositories.Realizations;
 using Todolist.WebApi.Validators;
@@ -25,7 +25,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<ITasksRepository, TasksRepository>();
 builder.Services.AddScoped<ITasksService, TasksService>();
-builder.Services.AddScoped<IValidator<TodoTask>, TaskValidator>();
+builder.Services.AddScoped<IValidator<FullTask>, TaskValidator>();
 
 var app = builder.Build();
 

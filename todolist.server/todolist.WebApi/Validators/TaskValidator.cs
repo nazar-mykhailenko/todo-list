@@ -1,9 +1,9 @@
 using FluentValidation;
-using Todolist.DAL.Entities;
+using Todolist.BLL.Models;
 
 namespace Todolist.WebApi.Validators;
 
-public  class TaskValidator : AbstractValidator<TodoTask>
+public  class TaskValidator : AbstractValidator<FullTask>
 {
     public TaskValidator()
     {
