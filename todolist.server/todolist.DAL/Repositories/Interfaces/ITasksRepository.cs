@@ -6,13 +6,13 @@ public interface ITasksRepository
 {
     Task<TodoTask> GetById(int id);
 
-	Task<IEnumerable<TodoTask>> GetAll();
+    Task<IEnumerable<TodoTask>> GetAll();
 
-	void Create(TodoTask task);
+    void Create(TodoTask task);
 
-	void Update(TodoTask task);
+    void Update(TodoTask task);
 
-	void Delete(TodoTask task);
+    void Delete(TodoTask task);
 
-	Task Save();
+    Task Save();
 }

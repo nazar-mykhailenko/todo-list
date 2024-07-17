@@ -23,6 +23,7 @@ public class TasksService : ITasksService
 
     public async Task Create(FullTask taskModel)
     {
+        logger.LogInformation("Start adding task");
         var taskEntity = mapper.Map<TodoTask>(taskModel);
         tasksRepository.Create(taskEntity);
         await tasksRepository.Save();
@@ -31,6 +32,7 @@ public class TasksService : ITasksService
 
     public async Task Delete(int id)
     {
+        logger.LogInformation($"Start deleting task {id}");
         var task = await tasksRepository.GetById(id);
 
         tasksRepository.Delete(task);
@@ -51,7 +53,7 @@ public class TasksService : ITasksService
         var taskEntity = await tasksRepository.GetById(id);
         if (taskEntity is null)
         {
-            logger.LogWarning($"Task with id {id} not found on delete");
+            logger.LogWarning($"Task with id {id} not found");
             throw new NotFoundException();
         }
 
@@ -62,6 +64,7 @@ public class TasksService : ITasksService
 
     public async Task Update(FullTask taskModel)
     {
+        logger.LogInformation($"Started updating task {taskModel.Id}");
         await tasksRepository.GetById(taskModel.Id);
         var task = mapper.Map<TodoTask>(taskModel);
         tasksRepository.Update(task);
