@@ -6,11 +6,11 @@ public interface ITasksService
 {
     Task<ShortTask> GetAll();
 
-	Task<FullTask> GetById();
+    Task<FullTask> GetById();
 
-	Task Create(FullTask taskModel);
+    Task Create(FullTask taskModel);
 
-	Task Update(FullTask taskModel);
+    Task Update(FullTask taskModel);
 
-	Task Delete(int id);
+    Task Delete(int id);
 }
