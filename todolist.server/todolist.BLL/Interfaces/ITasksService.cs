@@ -1,3 +1,5 @@
+using OneOf;
+using OneOf.Types;
 using Todolist.BLL.Models;
 
 namespace Todolist.BLL.Interfaces;
@@ -10,7 +12,7 @@ public interface ITasksService
 
     Task CreateAsync(CreateTaskModel taskModel);
 
-    Task UpdateAsync(FullTask taskModel);
+    Task<OneOf<None, NotFound>> UpdateAsync(FullTask taskModel);
 
-    Task DeleteAsync(int id);
+    Task<OneOf<None, NotFound>> DeleteAsync(int id);
 }

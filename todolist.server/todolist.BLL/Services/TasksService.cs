@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using Todolist.BLL.Exceptions;
+using OneOf;
+using OneOf.Types;
 using Todolist.BLL.Interfaces;
 using Todolist.BLL.Models;
 using Todolist.DAL.Entities;
@@ -34,14 +35,19 @@ public class TasksService : ITasksService
         logger.LogInformation($"Task with id {taskEntity.Id} added");
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task<OneOf<None, NotFound>> DeleteAsync(int id)
     {
         logger.LogInformation($"Start deleting task {id}");
         var task = await tasksRepository.GetByIdAsync(id);
+        if (task is null)
+        {
+            return new NotFound();
+        }
 
         tasksRepository.DeleteAsync(task);
         await tasksRepository.SaveAsync();
         logger.LogInformation($"Task with id {id} successfully deleted");
+        return new None();
     }
 
     public async Task<IEnumerable<ShortTask>> GetAllAsync()
@@ -55,24 +61,23 @@ public class TasksService : ITasksService
     public async Task<FullTask> GetByIdAsync(int id)
     {
         var taskEntity = await tasksRepository.GetByIdAsync(id);
-        if (taskEntity is null)
-        {
-            logger.LogWarning($"Task with id {id} not found");
-            throw new NotFoundException();
-        }
-
         var taskModel = mapper.Map<FullTask>(taskEntity);
         logger.LogInformation($"Successfully returned task with id {id}");
         return taskModel;
     }
 
-    public async Task UpdateAsync(FullTask taskModel)
+    public async Task<OneOf<None, NotFound>> UpdateAsync(FullTask taskModel)
     {
         logger.LogInformation($"Started updating task {taskModel.Id}");
-        await tasksRepository.GetByIdAsync(taskModel.Id);
+        var taskCheck = await tasksRepository.GetByIdAsync(taskModel.Id);
+        if (taskCheck is null)
+        {
+            return new NotFound();
+        }
         var task = mapper.Map<TodoTask>(taskModel);
         tasksRepository.UpdateAsync(task);
         await tasksRepository.SaveAsync();
         logger.LogInformation($"Task with id {task.Id} successfully deleted");
+        return new None();
     }
 }

@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Automapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="OneOf" Version="3.0.271" />
   </ItemGroup>
 
   <ItemGroup>
