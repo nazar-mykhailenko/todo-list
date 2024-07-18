@@ -26,6 +26,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<ITasksRepository, TasksRepository>();
 builder.Services.AddScoped<ITasksService, TasksService>();
 builder.Services.AddScoped<IValidator<FullTask>, TaskValidator>();
+builder.Services.AddScoped<IValidator<CreateTaskModel>, CreateTaskValidator>();
 
 var app = builder.Build();
 
