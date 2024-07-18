@@ -39,14 +39,13 @@ public class TasksController : ControllerBase
             return BadRequest();
         }
 
-        var task = await tasksService.GetByIdAsync(id);
+        var result = await tasksService.GetByIdAsync(id);
 
-        if (task is null)
-        {
-            return NotFound();
-        }
+        return result.Match<ActionResult<FullTask>>(
+                task => Ok(task),
+                notFound => NotFound()
+                );
 
-        return Ok(task);
     }
 
     [HttpPost]

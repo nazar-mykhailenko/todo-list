@@ -8,7 +8,7 @@ public interface ITasksService
 {
     Task<IEnumerable<ShortTask>> GetAllAsync();
 
-    Task<FullTask> GetByIdAsync(int id);
+    Task<OneOf<FullTask, NotFound>> GetByIdAsync(int id);
 
     Task CreateAsync(CreateTaskModel taskModel);
 

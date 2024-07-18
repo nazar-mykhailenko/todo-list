@@ -41,6 +41,7 @@ public class TasksService : ITasksService
         var task = await tasksRepository.GetByIdAsync(id);
         if (task is null)
         {
+            logger.LogWarning($"Task with id {id} not found");
             return new NotFound();
         }
 
@@ -58,9 +59,15 @@ public class TasksService : ITasksService
         return taskModels;
     }
 
-    public async Task<FullTask> GetByIdAsync(int id)
+    public async Task<OneOf<FullTask, NotFound>> GetByIdAsync(int id)
     {
         var taskEntity = await tasksRepository.GetByIdAsync(id);
+        if (taskEntity is null)
+        {
+            logger.LogWarning($"Task with id {id} not found");
+            return new NotFound();
+        }
+
         var taskModel = mapper.Map<FullTask>(taskEntity);
         logger.LogInformation($"Successfully returned task with id {id}");
         return taskModel;
@@ -72,6 +79,7 @@ public class TasksService : ITasksService
         var taskCheck = await tasksRepository.GetByIdAsync(taskModel.Id);
         if (taskCheck is null)
         {
+            logger.LogWarning($"Task with id {taskModel.Id} not found");
             return new NotFound();
         }
         var task = mapper.Map<TodoTask>(taskModel);
