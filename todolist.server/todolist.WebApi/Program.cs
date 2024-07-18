@@ -9,6 +9,10 @@ using Todolist.DAL.Repositories.Interfaces;
 using Todolist.DAL.Repositories.Realizations;
 using Todolist.WebApi.Validators;
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
