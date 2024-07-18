@@ -4,13 +4,13 @@ namespace Todolist.BLL.Interfaces;
 
 public interface ITasksService
 {
-    Task<IEnumerable<ShortTask>> GetAll();
+    Task<IEnumerable<ShortTask>> GetAllAsync();
 
-    Task<FullTask> GetById(int id);
+    Task<FullTask> GetByIdAsync(int id);
 
-    Task Create(FullTask taskModel);
+    Task CreateAsync(CreateTaskModel taskModel);
 
-    Task Update(FullTask taskModel);
+    Task UpdateAsync(FullTask taskModel);
 
-    Task Delete(int id);
+    Task DeleteAsync(int id);
 }

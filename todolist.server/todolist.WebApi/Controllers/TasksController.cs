@@ -11,22 +11,24 @@ namespace Todolist.WebApi.Controllers;
 public class TasksController : ControllerBase
 {
     private readonly ITasksService tasksService;
-    private readonly IValidator<FullTask> validator;
+    private readonly IValidator<FullTask> taskValidator;
+    private readonly IValidator<CreateTaskModel> createTaskValidator;
 
-    public TasksController(ITasksService tasksService, IValidator<FullTask> validator)
+    public TasksController(ITasksService tasksService, IValidator<FullTask> validator, IValidator<CreateTaskModel> createTaskValidator)
     {
         this.tasksService = tasksService;
-        this.validator = validator;
+        this.taskValidator = validator;
+        this.createTaskValidator = createTaskValidator;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ShortTask>>> GetAll()
+    public async Task<ActionResult<IEnumerable<ShortTask>>> GetAllAsync()
     {
-        return Ok(await tasksService.GetAll());
+        return Ok(await tasksService.GetAllAsync());
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<FullTask>> GetById(int id)
+    public async Task<ActionResult<FullTask>> GetByIdAsync(int id)
     {
         if (id <= 0)
         {
@@ -35,41 +37,41 @@ public class TasksController : ControllerBase
 
         return await Catch(async () =>
         {
-            var task = await tasksService.GetById(id);
+            var task = await tasksService.GetByIdAsync(id);
 
             return Ok(task);
         });
     }
 
     [HttpPost]
-    public async Task<ActionResult> Create(FullTask task)
+    public async Task<ActionResult> CreateAsync(CreateTaskModel task)
     {
-        if (!validator.Validate(task).IsValid)
+        if (!createTaskValidator.Validate(task).IsValid)
         {
             return BadRequest();
         }
 
-        await tasksService.Create(task);
+        await tasksService.CreateAsync(task);
         return NoContent();
     }
 
     [HttpPut]
-    public async Task<ActionResult> Update(FullTask task)
+    public async Task<ActionResult> UpdateAsync(FullTask task)
     {
-        if (!validator.Validate(task).IsValid)
+        if (!taskValidator.Validate(task).IsValid)
         {
             return BadRequest();
         }
 
         return await Catch(async () =>
         {
-            await tasksService.Update(task);
+            await tasksService.UpdateAsync(task);
             return NoContent();
         });
     }
 
-    [HttpDelete]
-    public async Task<ActionResult> Delete(int id)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteAsync(int id)
     {
         if (id <= 0)
         {
@@ -78,7 +80,7 @@ public class TasksController : ControllerBase
 
         return await Catch(async () =>
         {
-            await tasksService.Delete(id);
+            await tasksService.DeleteAsync(id);
             return NoContent();
         });
     }

@@ -4,15 +4,15 @@ namespace Todolist.DAL.Repositories.Interfaces;
 
 public interface ITasksRepository
 {
-    Task<TodoTask> GetById(int id);
+    Task<TodoTask> GetByIdAsync(int id);
 
-    Task<IEnumerable<TodoTask>> GetAll();
+    Task<IEnumerable<TodoTask>> GetAllAsync();
 
-    void Create(TodoTask task);
+    void CreateAsync(TodoTask task);
 
-    void Update(TodoTask task);
+    void UpdateAsync(TodoTask task);
 
-    void Delete(TodoTask task);
+    void DeleteAsync(TodoTask task);
 
-    Task Save();
+    Task SaveAsync();
 }

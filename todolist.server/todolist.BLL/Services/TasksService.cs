@@ -14,43 +14,47 @@ public class TasksService : ITasksService
     private readonly ILogger<TasksService> logger;
     private readonly ITasksRepository tasksRepository;
 
-    public TasksService(IMapper mapper, ILogger<TasksService> logger, ITasksRepository tasksRepository)
+    public TasksService(
+        IMapper mapper,
+        ILogger<TasksService> logger,
+        ITasksRepository tasksRepository
+    )
     {
         this.mapper = mapper;
         this.logger = logger;
         this.tasksRepository = tasksRepository;
     }
 
-    public async Task Create(FullTask taskModel)
+    public async Task CreateAsync(CreateTaskModel taskModel)
     {
         logger.LogInformation("Start adding task");
         var taskEntity = mapper.Map<TodoTask>(taskModel);
-        tasksRepository.Create(taskEntity);
-        await tasksRepository.Save();
+        tasksRepository.CreateAsync(taskEntity);
+        await tasksRepository.SaveAsync();
         logger.LogInformation($"Task with id {taskEntity.Id} added");
     }
 
-    public async Task Delete(int id)
+    public async Task DeleteAsync(int id)
     {
         logger.LogInformation($"Start deleting task {id}");
-        var task = await tasksRepository.GetById(id);
+        var task = await tasksRepository.GetByIdAsync(id);
 
-        tasksRepository.Delete(task);
-        await tasksRepository.Save();
+        tasksRepository.DeleteAsync(task);
+        await tasksRepository.SaveAsync();
         logger.LogInformation($"Task with id {id} successfully deleted");
     }
 
-    public async Task<IEnumerable<ShortTask>> GetAll()
+    public async Task<IEnumerable<ShortTask>> GetAllAsync()
     {
-        var tasks = await tasksRepository.GetAll();
+        var tasks = await tasksRepository.GetAllAsync();
         var taskModels = mapper.Map<IEnumerable<ShortTask>>(tasks);
         logger.LogInformation("Successfully returned all tasks");
         return taskModels;
     }
 
-    public async Task<FullTask> GetById(int id)
+    public async Task<FullTask> GetByIdAsync(int id)
     {
-        var taskEntity = await tasksRepository.GetById(id);
+        var taskEntity = await tasksRepository.GetByIdAsync(id);
         if (taskEntity is null)
         {
             logger.LogWarning($"Task with id {id} not found");
@@ -62,13 +66,13 @@ public class TasksService : ITasksService
         return taskModel;
     }
 
-    public async Task Update(FullTask taskModel)
+    public async Task UpdateAsync(FullTask taskModel)
     {
         logger.LogInformation($"Started updating task {taskModel.Id}");
-        await tasksRepository.GetById(taskModel.Id);
+        await tasksRepository.GetByIdAsync(taskModel.Id);
         var task = mapper.Map<TodoTask>(taskModel);
-        tasksRepository.Update(task);
-        await tasksRepository.Save();
+        tasksRepository.UpdateAsync(task);
+        await tasksRepository.SaveAsync();
         logger.LogInformation($"Task with id {task.Id} successfully deleted");
     }
 }
