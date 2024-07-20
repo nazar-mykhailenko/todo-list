@@ -26,7 +26,7 @@ public class TasksController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ShortTask>>> GetAllAsync()
+    public async Task<ActionResult<IEnumerable<FullTask>>> GetAllAsync()
     {
         return Ok(await tasksService.GetAllAsync());
     }

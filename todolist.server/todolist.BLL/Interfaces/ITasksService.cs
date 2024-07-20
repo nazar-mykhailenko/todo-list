@@ -6,7 +6,7 @@ namespace Todolist.BLL.Interfaces;
 
 public interface ITasksService
 {
-    Task<IEnumerable<ShortTask>> GetAllAsync();
+    Task<IEnumerable<FullTask>> GetAllAsync();
 
     Task<OneOf<FullTask, NotFound>> GetByIdAsync(int id);
 

@@ -8,8 +8,6 @@ public class TaskProfile : Profile
 {
     public TaskProfile()
     {
-        CreateMap<TodoTask, ShortTask>();
-
         CreateMap<TodoTask, FullTask>().ReverseMap();
 
         CreateMap<CreateTaskModel, TodoTask>();

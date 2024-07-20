@@ -51,10 +51,10 @@ public class TasksService : ITasksService
         return new None();
     }
 
-    public async Task<IEnumerable<ShortTask>> GetAllAsync()
+    public async Task<IEnumerable<FullTask>> GetAllAsync()
     {
         var tasks = await tasksRepository.GetAllAsync();
-        var taskModels = mapper.Map<IEnumerable<ShortTask>>(tasks);
+        var taskModels = mapper.Map<IEnumerable<FullTask>>(tasks);
         logger.LogInformation("Successfully returned all tasks");
         return taskModels;
     }
