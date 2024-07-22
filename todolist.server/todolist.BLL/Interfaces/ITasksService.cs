@@ -10,7 +10,7 @@ public interface ITasksService
 
     Task<OneOf<FullTask, NotFound>> GetByIdAsync(int id);
 
-    Task CreateAsync(CreateTaskModel taskModel);
+    Task<FullTask> CreateAsync(CreateTaskModel taskModel);
 
     Task<OneOf<None, NotFound>> UpdateAsync(FullTask taskModel);
 

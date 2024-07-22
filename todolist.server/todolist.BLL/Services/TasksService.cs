@@ -26,13 +26,14 @@ public class TasksService : ITasksService
         this.tasksRepository = tasksRepository;
     }
 
-    public async Task CreateAsync(CreateTaskModel taskModel)
+    public async Task<FullTask> CreateAsync(CreateTaskModel taskModel)
     {
         logger.LogInformation("Start adding task");
         var taskEntity = mapper.Map<TodoTask>(taskModel);
         tasksRepository.CreateAsync(taskEntity);
         await tasksRepository.SaveAsync();
         logger.LogInformation($"Task with id {taskEntity.Id} added");
+				return mapper.Map<FullTask>(taskEntity);
     }
 
     public async Task<OneOf<None, NotFound>> DeleteAsync(int id)

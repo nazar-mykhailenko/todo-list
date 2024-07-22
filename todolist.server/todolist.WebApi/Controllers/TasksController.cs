@@ -49,15 +49,15 @@ public class TasksController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateAsync(CreateTaskModel task)
+    public async Task<ActionResult<FullTask>> CreateAsync(CreateTaskModel task)
     {
         if (!createTaskValidator.Validate(task).IsValid)
         {
             return BadRequest();
         }
 
-        await tasksService.CreateAsync(task);
-        return NoContent();
+        var result = await tasksService.CreateAsync(task);
+        return Ok(result);
     }
 
     [HttpPut]

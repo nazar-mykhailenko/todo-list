@@ -1,4 +1,4 @@
-import { Button, Flex } from "antd";
+import { Button, Flex, Popconfirm } from "antd";
 import "./taskItem.styles.scss";
 import {
 	DeleteOutlined,
@@ -11,19 +11,29 @@ import { useState } from "react";
 
 interface TaskProps {
 	task: Task;
+	onDelete: (id: number) => Promise<void>;
 }
 
-const TaskItem = ({ task }: TaskProps) => {
+const TaskItem = ({ task, onDelete }: TaskProps) => {
 	const [showMore, setShowMore] = useState(false);
 	return (
 		<div className="task">
 			<Flex justify="space-between">
 				<div className="task-title">{task.title}</div>
 				<Flex className="buttons" justify="flex-end" gap="small">
-					{ /* TODO: add modal on click */ }
+					{/* TODO: add modal on click */}
 					<Button icon={<EditOutlined />} type="text" />
-					{/* TODO: add confirmation */ }
-					<Button icon={<DeleteOutlined />} type="text" />
+					{/* TODO: add confirmation */}
+					<Popconfirm
+						title="Delete the task"
+						description="Are you sure to delete this task?"
+						okText="Yes"
+						onConfirm={() => onDelete(task.id)}
+						cancelText="No"
+						icon={<DeleteOutlined />}
+					>
+						<Button icon={<DeleteOutlined />} type="text" />
+					</Popconfirm>
 				</Flex>
 			</Flex>
 			<div className="task-description">

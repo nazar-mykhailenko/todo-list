@@ -9,7 +9,7 @@ public class CreateTaskValidator : AbstractValidator<CreateTaskModel>
     {
         RuleFor(t => t.Title).NotNull().Length(3, 50);
         RuleFor(t => t.Status).NotNull().Must(
-                s => s == "Todo" || s == "In Progress" || s == "Done"
+                s => s == "To Do" || s == "In Progress" || s == "Done"
                 );
     }
 }

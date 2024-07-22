@@ -5,15 +5,16 @@ import "./taskcolumn.styles.scss";
 interface TaskColumnProps {
 	tasks: Task[];
 	status: string;
+	onDelete: (id: number) => Promise<void>;
 }
 
-const TaskColumn = ({ tasks, status }: TaskColumnProps) => {
+const TaskColumn = ({ tasks, status, onDelete }: TaskColumnProps) => {
 	return (
 		<>
-			<div className="status">{status}</div>
 			<div className="column">
+			<div className="status">{status}</div>
 				{tasks.map((task) => (
-					<TaskItem task={task} />
+					<TaskItem key={task.id} task={task} onDelete={onDelete}/>
 				))}
 			</div>
 		</>
