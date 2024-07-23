@@ -18,6 +18,8 @@
   letter-spacing: -2%;
   color: #1d2939;
   margin-bottom: 10px;
+  word-wrap: break-word;
+  max-width: 80%;
 }
 
 .task-description {
@@ -26,6 +28,8 @@
   line-height: 150%;
   letter-spacing: -2%;
   color: #98a2b3;
+  word-wrap: break-word;
+  padding-bottom: 10px;
 }
 
 .buttons {

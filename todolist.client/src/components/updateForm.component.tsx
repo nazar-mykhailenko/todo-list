@@ -1,33 +1,43 @@
 import { Button, Form, Input, Modal, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { UpsertTask } from "../types";
+import { Task, UpsertTask } from "../types";
 
-interface CreateFormProps {
+interface UpdateFormProps {
   open: boolean;
   setOpen: (arg0: boolean) => void;
-	onCreate: (task: UpsertTask) => Promise<void>;
+  onUpdate: (task: Task) => Promise<void>;
+  taskToUpdate: Task;
 }
 
-const CreateForm = ({ open, setOpen, onCreate }: CreateFormProps) => {
-	const [form] = Form.useForm();
+const UpdateForm = ({
+  open,
+  setOpen,
+  onUpdate,
+  taskToUpdate,
+}: UpdateFormProps) => {
+  const [form] = Form.useForm();
+	form.setFieldsValue({...taskToUpdate});
 
-	const onFinish = (task: UpsertTask) => {
-		onCreate(task);
+  const onFinish = (task: UpsertTask) => {
+    onUpdate({
+      ...task,
+      id: taskToUpdate.id,
+    });
 
-		setOpen(false);
-		form.resetFields();
-	}
+    setOpen(false);
+    form.resetFields();
+  };
 
-	const handleCancel = () => {
-		setOpen(false);
-		form.resetFields();
-	}
+  const handleCancel = () => {
+    setOpen(false);
+    form.resetFields();
+  };
 
   return (
     <Modal
       title="Add task"
       open={open}
-			onCancel={handleCancel}
+      onCancel={handleCancel}
       okType="default"
       footer={null}
     >
@@ -35,7 +45,14 @@ const CreateForm = ({ open, setOpen, onCreate }: CreateFormProps) => {
         <Form.Item
           label="Title"
           name="title"
-          rules={[{ required: true, message: "Title must be from 3 to 50 characters long", min: 3, max: 50 }]}
+          rules={[
+            {
+              required: true,
+              message: "Title must be from 3 to 50 characters long",
+              min: 3,
+              max: 50,
+            },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -57,7 +74,7 @@ const CreateForm = ({ open, setOpen, onCreate }: CreateFormProps) => {
         </Form.Item>
         <Form.Item>
           <Button htmlType="submit" type="primary">
-            Add
+            Update
           </Button>
         </Form.Item>
       </Form>
@@ -65,4 +82,4 @@ const CreateForm = ({ open, setOpen, onCreate }: CreateFormProps) => {
   );
 };
 
-export default CreateForm;
+export default UpdateForm;

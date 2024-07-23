@@ -5,7 +5,7 @@ export interface Task {
 	status: string;
 }
 
-export interface CreateTask {
+export interface UpsertTask {
 	title: string;
 	description?: string;
 	status: string;
