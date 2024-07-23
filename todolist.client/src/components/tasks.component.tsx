@@ -14,9 +14,11 @@ const Tasks = () => {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
 
+	const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:5001/api/tasks';
+
   useEffect(() => {
     const fetchTasks = async () => {
-      let response = await fetch("/api/tasks");
+      let response = await fetch(apiUrl);
       let tasks: Task[] = await response.json();
       setTasks(tasks);
     };
@@ -25,7 +27,7 @@ const Tasks = () => {
   }, []);
 
   async function addTask(createTask: UpsertTask): Promise<void> {
-    const response = await fetch("/api/tasks", {
+    const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +50,7 @@ const Tasks = () => {
   }
 
 	async function updateTask(task: Task): Promise<void> {
-		const response = await fetch('/api/tasks', {
+		const response = await fetch(apiUrl, {
 			method: 'PUT',
       headers: {
         "Content-Type": "application/json",
@@ -70,7 +72,7 @@ const Tasks = () => {
 	}
 
   async function deleteTask(id: number): Promise<void> {
-    const response = await fetch(`/api/tasks/${id}`, { method: "DELETE" });
+    const response = await fetch(`${apiUrl}/${id}`, { method: "DELETE" });
 
     if (response.ok) {
       message.success("Task successfully deleted");

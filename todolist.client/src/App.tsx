@@ -1,4 +1,3 @@
-import Header from "./components/header.component";
 import Tasks from "./components/tasks.component";
 import "./styles.scss";
 

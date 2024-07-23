@@ -1,0 +1,29 @@
+services:
+  frontend:
+    build: ./todolist.client/
+    ports:
+      - 7000:7000
+    depends_on:
+      - backend
+    env_file:
+        - .env
+  backend:
+    build: ./todolist.server/
+    ports:
+      - 5001:5001
+    depends_on:
+      - database
+    env_file:
+        - .env
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    ports: 
+      - 1433:1433
+    env_file:
+        - .env
+    volumes:
+      - todolist-data:/var/opt/mssql/data
+
+volumes:
+  todolist-data:

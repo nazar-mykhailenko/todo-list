@@ -9,9 +9,7 @@ using Todolist.DAL.Repositories.Interfaces;
 using Todolist.DAL.Repositories.Realizations;
 using Todolist.WebApi.Validators;
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateLogger();
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +31,17 @@ builder.Services.AddScoped<IValidator<FullTask>, TaskValidator>();
 builder.Services.AddScoped<IValidator<CreateTaskModel>, CreateTaskValidator>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<AppDbContext>();
+    if (context.Database.GetPendingMigrations().Count() > 0)
+    {
+        context.Database.Migrate();
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
