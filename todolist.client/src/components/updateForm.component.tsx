@@ -1,42 +1,32 @@
 import { Button, Form, Input, Modal, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { Task, UpsertTask } from "../types";
+import { UpsertTask } from "../types";
+import todoStore from "../stores/todoStore";
+import { observer } from "mobx-react-lite";
 
-interface UpdateFormProps {
-  open: boolean;
-  setOpen: (arg0: boolean) => void;
-  onUpdate: (task: Task) => Promise<void>;
-  taskToUpdate: Task;
-}
-
-const UpdateForm = ({
-  open,
-  setOpen,
-  onUpdate,
-  taskToUpdate,
-}: UpdateFormProps) => {
+const UpdateForm = observer(() => {
   const [form] = Form.useForm();
-	form.setFieldsValue({...taskToUpdate});
+  form.setFieldsValue({ ...todoStore.tasksToUpdate });
 
   const onFinish = (task: UpsertTask) => {
-    onUpdate({
+    todoStore.updateTask({
       ...task,
-      id: taskToUpdate.id,
+      id: todoStore.tasksToUpdate.id,
     });
 
-    setOpen(false);
+    todoStore.isUpdateFormOpen = false;
     form.resetFields();
   };
 
   const handleCancel = () => {
-    setOpen(false);
+    todoStore.isUpdateFormOpen = false;
     form.resetFields();
   };
 
   return (
     <Modal
       title="Add task"
-      open={open}
+      open={todoStore.isUpdateFormOpen}
       onCancel={handleCancel}
       okType="default"
       footer={null}
@@ -80,6 +70,6 @@ const UpdateForm = ({
       </Form>
     </Modal>
   );
-};
+});
 
 export default UpdateForm;

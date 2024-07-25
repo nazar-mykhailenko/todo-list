@@ -12,20 +12,14 @@ import {
 } from "@ant-design/icons";
 import { Task } from "../types";
 import { useState } from "react";
+import todoStore from "../stores/todoStore";
+import { observer } from "mobx-react-lite";
 
 interface TaskProps {
   task: Task;
-  onDelete: (id: number) => Promise<void>;
-  setTaskToUpdate: (task: Task) => void;
-  setIsUpdateFormOpen: (arg0: boolean) => void;
 }
 
-const TaskItem = ({
-  task,
-  onDelete,
-  setTaskToUpdate,
-  setIsUpdateFormOpen,
-}: TaskProps) => {
+const TaskItem = observer(({ task }: TaskProps) => {
   const [showMore, setShowMore] = useState(false);
 
   function getIcon(): JSX.Element {
@@ -48,11 +42,7 @@ const TaskItem = ({
   };
 
   return (
-    <div
-      className="task"
-      draggable
-      onDragStart={handleDragStart}
-    >
+    <div className="task" draggable onDragStart={handleDragStart}>
       <Flex justify="space-between">
         <div className="task-title">{task.title}</div>
         <Flex className="buttons" justify="flex-end" gap="small">
@@ -61,8 +51,8 @@ const TaskItem = ({
             icon={<EditOutlined />}
             type="text"
             onClick={() => {
-              setTaskToUpdate(task);
-              setIsUpdateFormOpen(true);
+              todoStore.tasksToUpdate = task;
+              todoStore.isUpdateFormOpen = true;
             }}
           />
           {/* TODO: add confirmation */}
@@ -70,7 +60,7 @@ const TaskItem = ({
             title="Delete the task"
             description="Are you sure to delete this task?"
             okText="Yes"
-            onConfirm={() => onDelete(task.id)}
+            onConfirm={() => todoStore.deleteTask(task.id)}
             cancelText="No"
             icon={<DeleteOutlined />}
           >
@@ -96,6 +86,6 @@ const TaskItem = ({
       </Flex>
     </div>
   );
-};
+});
 
 export default TaskItem;

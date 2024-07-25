@@ -1,87 +1,13 @@
-import { Button, message } from "antd";
+import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import "./tasks.styles.scss";
-import { useEffect, useState } from "react";
-import { UpsertTask, Task } from "../types";
 import TaskColumn from "./taskcolumn.component";
 import CreateForm from "./createForm.component";
 import UpdateForm from "./updateForm.component";
+import todoStore from "../stores/todoStore";
+import { observer } from "mobx-react-lite";
 
-const Tasks = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-
-	const [taskToUpdate, setTaskToUpdate] = useState<Task>({id: 0, title: '', status: ''});
-  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
-  const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
-
-	const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:5001/api/tasks';
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      let response = await fetch(apiUrl);
-      let tasks: Task[] = await response.json();
-      setTasks(tasks);
-    };
-
-    fetchTasks();
-  }, []);
-
-  async function addTask(createTask: UpsertTask): Promise<void> {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(createTask),
-    });
-
-    const task: Task = await response.json();
-    console.log(task);
-
-    if (response.ok) {
-      message.success("Task successfully added");
-      setTasks((tasks) => {
-        tasks.push(task);
-        return [...tasks];
-      });
-    } else {
-      message.error("Something went wrong");
-    }
-  }
-
-	async function updateTask(task: Task): Promise<void> {
-		const response = await fetch(apiUrl, {
-			method: 'PUT',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(task),
-		});
-
-    if (response.ok) {
-      message.success("Task successfully updated");
-      setTasks((tasks) => {
-				const index = tasks.findIndex((t) => t.id === task.id);
-				tasks[index] = task;
-        return [...tasks];
-      });
-    } else {
-      message.error("Something went wrong");
-    }
-		
-	}
-
-  async function deleteTask(id: number): Promise<void> {
-    const response = await fetch(`${apiUrl}/${id}`, { method: "DELETE" });
-
-    if (response.ok) {
-      message.success("Task successfully deleted");
-      setTasks((tasks) => tasks.filter((task) => task.id !== id));
-    } else {
-      message.error("Something went wrong");
-    }
-  }
-
+const Tasks = observer(() => {
   return (
     <>
       <main className="tasks">
@@ -89,52 +15,22 @@ const Tasks = () => {
           <h1>Your tasks</h1>
           <Button
             type="default"
-            onClick={() => setIsCreateFormOpen(true)}
+            onClick={() => (todoStore.isCreateFormOpen = true)}
             icon={<PlusOutlined />}
           >
             Add tasks
           </Button>
         </div>
         <div className="columns">
-          <TaskColumn
-						onUpdate={updateTask}
-            onDelete={deleteTask}
-            status="To Do"
-            tasks={tasks.filter((task) => task.status === "To Do")}
-						setTaskToUpdate={setTaskToUpdate}
-						setIsUpdateFormOpen={setIsUpdateFormOpen}
-          />
-          <TaskColumn
-						onUpdate={updateTask}
-            onDelete={deleteTask}
-            status="In Progress"
-            tasks={tasks.filter((task) => task.status === "In Progress")}
-						setTaskToUpdate={setTaskToUpdate}
-						setIsUpdateFormOpen={setIsUpdateFormOpen}
-          />
-          <TaskColumn
-						onUpdate={updateTask}
-            onDelete={deleteTask}
-            status="Done"
-            tasks={tasks.filter((task) => task.status === "Done")}
-						setTaskToUpdate={setTaskToUpdate}
-						setIsUpdateFormOpen={setIsUpdateFormOpen}
-          />
+          <TaskColumn status="To Do" />
+          <TaskColumn status="In Progress" />
+          <TaskColumn status="Done" />
         </div>
       </main>
-      <CreateForm
-        open={isCreateFormOpen}
-        onCreate={addTask}
-        setOpen={setIsCreateFormOpen}
-      />
-			<UpdateForm 
-				open={isUpdateFormOpen}
-				setOpen={setIsUpdateFormOpen}
-				taskToUpdate={taskToUpdate}
-				onUpdate={updateTask}
-			/>
+      <CreateForm />
+      <UpdateForm />
     </>
   );
-};
+});
 
 export default Tasks;

@@ -1,33 +1,29 @@
 import { Button, Form, Input, Modal, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { UpsertTask } from "../types";
+import todoStore from "../stores/todoStore";
+import { observer } from "mobx-react-lite";
 
-interface CreateFormProps {
-  open: boolean;
-  setOpen: (arg0: boolean) => void;
-	onCreate: (task: UpsertTask) => Promise<void>;
-}
+const CreateForm = observer(() => {
+  const [form] = Form.useForm();
 
-const CreateForm = ({ open, setOpen, onCreate }: CreateFormProps) => {
-	const [form] = Form.useForm();
+  const onFinish = (task: UpsertTask) => {
+    todoStore.addTask(task);
 
-	const onFinish = (task: UpsertTask) => {
-		onCreate(task);
+    todoStore.isCreateFormOpen = false;
+    form.resetFields();
+  };
 
-		setOpen(false);
-		form.resetFields();
-	}
-
-	const handleCancel = () => {
-		setOpen(false);
-		form.resetFields();
-	}
+  const handleCancel = () => {
+    todoStore.isCreateFormOpen = false;
+    form.resetFields();
+  };
 
   return (
     <Modal
       title="Add task"
-      open={open}
-			onCancel={handleCancel}
+      open={todoStore.isCreateFormOpen}
+      onCancel={handleCancel}
       okType="default"
       footer={null}
     >
@@ -35,7 +31,14 @@ const CreateForm = ({ open, setOpen, onCreate }: CreateFormProps) => {
         <Form.Item
           label="Title"
           name="title"
-          rules={[{ required: true, message: "Title must be from 3 to 50 characters long", min: 3, max: 50 }]}
+          rules={[
+            {
+              required: true,
+              message: "Title must be from 3 to 50 characters long",
+              min: 3,
+              max: 50,
+            },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -63,6 +66,6 @@ const CreateForm = ({ open, setOpen, onCreate }: CreateFormProps) => {
       </Form>
     </Modal>
   );
-};
+});
 
 export default CreateForm;
